@@ -51,6 +51,7 @@ public class LocalMultipartFile implements MultipartFile {
 		FileInputStream fileInputStream = new FileInputStream(url.getFile());
 		FileOutputStream fileOutputStream = new FileOutputStream(dest);
 		fileInputStream.transferTo(fileOutputStream);
+		fileInputStream.close();
 	}
 
 }
