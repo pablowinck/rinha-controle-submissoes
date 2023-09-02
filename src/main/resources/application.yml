@@ -1,0 +1,4 @@
+springdoc.swagger-ui.path: /v1/submissoes/doc
+springdoc:
+  api-docs:
+    path: /v1/submissoes/v3/api-docs

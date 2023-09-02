@@ -1,6 +1,7 @@
 package com.muralis.rinhacontrolesubmissoes.core.domain.entity;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.muralis.rinhacontrolesubmissoes.core.domain.mapper.LocalDateTimeConverter;
 import lombok.*;
 
@@ -37,6 +38,7 @@ public class Submissao {
 	private String quantidadePessoasInseridas;
 
 	@DynamoDBIgnore
+	@JsonIgnore
 	public String getNomeArquivo() {
 		return id + ".yml";
 	}
