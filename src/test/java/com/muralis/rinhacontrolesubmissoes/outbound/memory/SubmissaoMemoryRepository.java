@@ -13,7 +13,7 @@ import java.util.Optional;
 @Profile("test")
 public class SubmissaoMemoryRepository implements SubmissaoRepository {
 
-	private List<Submissao> submissoes = new ArrayList<>();
+	private final List<Submissao> submissoes = new ArrayList<>();
 
 	@Override
 	public Optional<Submissao> findById(String id) {
