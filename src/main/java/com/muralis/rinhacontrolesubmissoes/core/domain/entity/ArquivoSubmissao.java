@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
@@ -27,6 +28,10 @@ public class ArquivoSubmissao extends ByteArrayOutputStream {
 	@Override
 	public String toString() {
 		return "ArquivoSubmissao (id=" + id + ")";
+	}
+
+	public InputStream toInputStream() {
+		return new ByteArrayInputStream(this.toByteArray());
 	}
 
 }

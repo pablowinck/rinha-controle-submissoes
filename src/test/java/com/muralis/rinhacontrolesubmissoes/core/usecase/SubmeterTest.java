@@ -6,7 +6,7 @@ import com.muralis.rinhacontrolesubmissoes.core.domain.repository.ArquivoSubmiss
 import com.muralis.rinhacontrolesubmissoes.core.domain.repository.SubmissaoRepository;
 import com.muralis.rinhacontrolesubmissoes.core.dto.ProcessarSubmissaoCommand;
 import com.muralis.rinhacontrolesubmissoes.core.dto.SubmeterAplicacaoCommand;
-import com.muralis.rinhacontrolesubmissoes.core.events.MensagemPostadaNaFilaEmMemoria;
+import com.muralis.rinhacontrolesubmissoes.core.event.MensagemPostadaNaFilaEmMemoria;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
-@ActiveProfiles("test")
+@ActiveProfiles("default")
 @RecordApplicationEvents
 class SubmeterTest {
 

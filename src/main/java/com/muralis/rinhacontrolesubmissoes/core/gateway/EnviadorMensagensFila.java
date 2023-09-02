@@ -1,7 +1,7 @@
 package com.muralis.rinhacontrolesubmissoes.core.gateway;
 
 import com.muralis.rinhacontrolesubmissoes.core.dto.ProcessarSubmissaoCommand;
-import com.muralis.rinhacontrolesubmissoes.core.events.SubmissaoSalva;
+import com.muralis.rinhacontrolesubmissoes.core.domain.event.SubmissaoSalva;
 import org.springframework.context.event.EventListener;
 
 import java.util.logging.Logger;

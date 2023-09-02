@@ -4,7 +4,7 @@ import com.muralis.rinhacontrolesubmissoes.core.domain.entity.Submissao;
 import com.muralis.rinhacontrolesubmissoes.core.domain.repository.ArquivoSubmissaoRepository;
 import com.muralis.rinhacontrolesubmissoes.core.domain.repository.SubmissaoRepository;
 import com.muralis.rinhacontrolesubmissoes.core.dto.SubmeterAplicacaoCommand;
-import com.muralis.rinhacontrolesubmissoes.core.events.SubmissaoSalva;
+import com.muralis.rinhacontrolesubmissoes.core.domain.event.SubmissaoSalva;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.ApplicationEventPublisher;

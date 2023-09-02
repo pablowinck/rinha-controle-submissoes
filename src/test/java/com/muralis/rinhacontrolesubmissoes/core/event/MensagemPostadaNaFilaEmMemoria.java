@@ -1,4 +1,4 @@
-package com.muralis.rinhacontrolesubmissoes.core.events;
+package com.muralis.rinhacontrolesubmissoes.core.event;
 
 import org.springframework.context.ApplicationEvent;
 
