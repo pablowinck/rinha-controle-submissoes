@@ -37,7 +37,7 @@ public class LocalMultipartFile implements MultipartFile {
 	}
 
 	@Override
-	public byte[] getBytes() throws IOException {
+	public byte[] getBytes() {
 		return new File(url.getFile()).toString().getBytes();
 	}
 
