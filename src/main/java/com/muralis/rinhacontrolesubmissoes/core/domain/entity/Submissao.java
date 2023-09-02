@@ -1,13 +1,11 @@
 package com.muralis.rinhacontrolesubmissoes.core.domain.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class Submissao {
 
 	@Getter

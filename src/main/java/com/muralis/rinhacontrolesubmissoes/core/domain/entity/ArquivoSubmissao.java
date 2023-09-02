@@ -24,4 +24,9 @@ public class ArquivoSubmissao extends ByteArrayOutputStream {
 		return id + ".yml";
 	}
 
+	@Override
+	public String toString() {
+		return "ArquivoSubmissao (id=" + id + ")";
+	}
+
 }
