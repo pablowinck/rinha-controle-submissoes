@@ -6,10 +6,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
+
+import java.util.Objects;
 
 @RestControllerAdvice
 @Slf4j
@@ -53,6 +56,14 @@ public class RestInterceptor {
 		log.error(ex.getMessage());
 		return ResponseEntity.status(ex.getStatusCode())
 			.body(ResponseWithMessage.builder().mensagem(ex.getMessage()).build());
+	}
+
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	protected ResponseEntity<ResponseWithMessage> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+		String message = Objects.requireNonNull(ex.getBindingResult().getFieldError()).getDefaultMessage();
+		log.error(message);
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+			.body(ResponseWithMessage.builder().mensagem(message).build());
 	}
 
 }
