@@ -2,3 +2,4 @@ springdoc.swagger-ui.path: /v1/submissoes/doc
 springdoc:
   api-docs:
     path: /v1/submissoes/v3/api-docs
+logging.pattern.level: '%5p [${spring.zipkin.service.name:${spring.application.name:}}%X{traceId:-},%X{spanId:-}]'
