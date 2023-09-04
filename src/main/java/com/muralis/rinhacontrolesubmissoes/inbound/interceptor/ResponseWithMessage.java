@@ -7,8 +7,6 @@ import lombok.Data;
 @Builder
 public class ResponseWithMessage {
 
-	private String codigo;
-
 	private String mensagem;
 
 }

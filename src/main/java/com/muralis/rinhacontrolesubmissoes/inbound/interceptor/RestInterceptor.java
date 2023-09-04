@@ -1,5 +1,6 @@
 package com.muralis.rinhacontrolesubmissoes.inbound.interceptor;
 
+import com.muralis.rinhacontrolesubmissoes.core.domain.entity.DomainException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class RestInterceptor {
 		String message = "O campo " + ex.getParameterName() + " é obrigatório.";
 		log.error(message);
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-				.body(ResponseWithMessage.builder().mensagem(message).build());
+			.body(ResponseWithMessage.builder().mensagem(message).build());
 	}
 
 	@ExceptionHandler(HttpMessageNotReadableException.class)
@@ -28,7 +29,7 @@ public class RestInterceptor {
 		String message = "O corpo da requisição não pôde ser lido.";
 		log.error(message);
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-				.body(ResponseWithMessage.builder().mensagem(message).build());
+			.body(ResponseWithMessage.builder().mensagem(message).build());
 	}
 
 	@ExceptionHandler(NoHandlerFoundException.class)
@@ -36,7 +37,7 @@ public class RestInterceptor {
 		String message = "Recurso não encontrado.";
 		log.error(message);
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
-				.body(ResponseWithMessage.builder().mensagem(message).build());
+			.body(ResponseWithMessage.builder().mensagem(message).build());
 	}
 
 	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
@@ -44,7 +45,14 @@ public class RestInterceptor {
 		String message = "O método HTTP na solicitação não é permitido no resurso.";
 		log.error(message);
 		return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
-				.body(ResponseWithMessage.builder().mensagem(message).build());
+			.body(ResponseWithMessage.builder().mensagem(message).build());
+	}
+
+	@ExceptionHandler(DomainException.class)
+	protected ResponseEntity<ResponseWithMessage> handleDomainException(DomainException ex) {
+		log.error(ex.getMessage());
+		return ResponseEntity.status(ex.getStatusCode())
+			.body(ResponseWithMessage.builder().mensagem(ex.getMessage()).build());
 	}
 
 }

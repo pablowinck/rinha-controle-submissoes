@@ -1,6 +1,7 @@
 package com.muralis.rinhacontrolesubmissoes.core.domain.entity;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.muralis.rinhacontrolesubmissoes.core.domain.mapper.LocalDateTimeConverter;
 import lombok.*;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @ToString
 @DynamoDBTable(tableName = "SubmissoesRinha")
 @Getter
+@Setter
 public class Submissao {
 
 	@DynamoDBHashKey(attributeName = "id")
@@ -24,6 +26,7 @@ public class Submissao {
 
 	@Builder.Default
 	@DynamoDBTypeConverted(converter = LocalDateTimeConverter.class)
+	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
 	private LocalDateTime dataEnvio = LocalDateTime.now();
 
 	private String userId;
