@@ -18,4 +18,12 @@ public class DomainException extends RuntimeException {
 		return new DomainException("Registro não encontrado", 404);
 	}
 
+	public static DomainException SUBMISSAO_NOT_FOUND() {
+		return new DomainException("Submissão não encontrada", 404);
+	}
+
+	public static DomainException SITUACAO_SUBMISSAO_INVALIDA() {
+		return new DomainException("Situação da submissão é inválida para processamento", 400);
+	}
+
 }

@@ -1,0 +1,16 @@
+{
+  "name": "poc-k6",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node compilar-nota.js",
+    "k6": "k6 run ~/projects/poc-k6/index.js --out json=output.json"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "k6": "^0.0.0"
+  }
+}

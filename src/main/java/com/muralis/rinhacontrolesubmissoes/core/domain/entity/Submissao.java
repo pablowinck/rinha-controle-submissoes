@@ -4,8 +4,13 @@ import com.amazonaws.services.dynamodbv2.datamodeling.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.muralis.rinhacontrolesubmissoes.core.domain.mapper.LocalDateTimeConverter;
+import com.muralis.rinhacontrolesubmissoes.core.domain.service.CLIRunner;
 import lombok.*;
 
+import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -44,6 +49,26 @@ public class Submissao {
 	@JsonIgnore
 	public String getNomeArquivo() {
 		return id + ".yml";
+	}
+
+	public boolean isInvalidaParaProcessamento() {
+		return situacao.equals(SituacaoSubmissao.SUCESSO) || situacao.equals(SituacaoSubmissao.PROCESSANDO);
+	}
+
+	@SneakyThrows
+	public void processar(ArquivoSubmissao arquivoSubmissao) {
+		this.situacao = SituacaoSubmissao.PROCESSANDO;
+		InputStream inputStream = arquivoSubmissao.toInputStream();
+		Path tempDirectory = Files.createTempDirectory(id);
+		File tempFile = new File(tempDirectory.toString() + "/" + arquivoSubmissao.getNomeArquivo());
+		Files.copy(inputStream, tempFile.toPath());
+		var compiladorUrl = getClass().getClassLoader().getResource("compilador-metricas/index.js");
+		CLIRunner.getInstance()
+			.add("docker-compose -f " + tempFile + " up -d", null)
+			.add("k6 run --out json=output.json " + compiladorUrl.getPath() + " --summary-export " + id + ".json",
+					"output.json")
+			.run();
+
 	}
 
 }
