@@ -33,7 +33,9 @@ class SubmissaoTest {
 			.id("123")
 			.inputStream(submissaoGenerator.arquivoValido.getInputStream())
 			.build());
-		assertEquals(SituacaoSubmissao.PROCESSANDO, submissao.getSituacao());
+		assertNotNull(submissao.getNota());
+		assertNotNull(submissao.getQuantidadePessoasInseridas());
+		assertEquals(SituacaoSubmissao.SUCESSO, submissao.getSituacao());
 	}
 
 }

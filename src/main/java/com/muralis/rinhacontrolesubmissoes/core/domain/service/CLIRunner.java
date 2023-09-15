@@ -2,19 +2,13 @@ package com.muralis.rinhacontrolesubmissoes.core.domain.service;
 
 import lombok.extern.log4j.Log4j2;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 @Log4j2
 public class CLIRunner {
 
-	private static final HashMap<String, String> commands = new HashMap<>();
-
-	private static final int TIME_TO_WAIT_FILE = 1000 * 15; // 15 seconds
-
-	private static final int TIME_TO_WAIT = 1000 * 60 * 5; // 5 minutes
+	private static final List<String> commands = new ArrayList<>();
 
 	private static CLIRunner instance;
 
@@ -25,39 +19,30 @@ public class CLIRunner {
 		return instance;
 	}
 
-	public static CLIRunner add(String command, String fileToWait) {
-		commands.put(command, fileToWait);
+	public static CLIRunner add(String command) {
+		commands.add(command);
 		return getInstance();
 	}
 
 	public static void run() {
-		commands.forEach((command, fileToWait) -> {
+		commands.forEach(command -> {
 			try {
-				log.info("Running command: " + command);
-				Process exec = Runtime.getRuntime().exec(command);
-				exec.waitFor();
-				log.info("Command finished: " + command);
-				if (fileToWait != null) {
-					while (!Files.exists(Path.of(fileToWait))) {
-						try {
-							log.info("Waiting file: " + fileToWait);
-							Thread.sleep(TIME_TO_WAIT_FILE);
-						}
-						catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-					}
-					log.info("File found: " + fileToWait);
+				log.info("Running command: {}", command);
+				String[] rawCommand = new String[]{"/bin/bash", "-c", command};
+				Process process = Runtime.getRuntime().exec(rawCommand);
+				byte[] buffer = new byte[8192];
+				int read;
+				while ((read = process.getInputStream().read(buffer, 0, 8192)) >= 0) {
+					log.info("{}", new String(buffer, 0, read));
 				}
-				else {
-					log.info("Waiting " + TIME_TO_WAIT + "ms");
-					Thread.sleep(TIME_TO_WAIT);
-				}
+				process.waitFor();
+				log.info("Command {} executed", command);
 			}
-			catch (IOException | InterruptedException e) {
-				throw new RuntimeException(e);
+			catch (Exception exception) {
+				log.error("Error running command {}", command, exception);
 			}
 		});
+		commands.clear();
 	}
 
 }

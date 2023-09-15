@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 services:
   api1: # API - Instância 01
     image: rinha-api:latest
@@ -11,8 +11,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.15'
-          memory: 500M
+          cpus: "0.15"
+          memory: "0.5GB"
 
   api2: # API - Instância 02
     image: rinha-api:latest
@@ -25,13 +25,11 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.15'
-          memory: 500M
+          cpus: "0.15"
+          memory: "0.5GB"
 
   nginx: # Load Balancer
-    image: nginx:latest
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    image: custom-nginx:latest
     depends_on:
       - api1
       - api2
@@ -40,8 +38,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.15'
-          memory: 300M
+          cpus: "0.15"
+          memory: "0.3GB"
 
   db: # Banco de dados
     image: postgres
@@ -54,5 +52,5 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1.20'
-          memory: 1700M
+          cpus: "1.20"
+          memory: "1.7GB"

@@ -27,6 +27,8 @@ public class ProcessarSubmissao {
 			log.error("Submissao {} não pode ser processada", submissao);
 			throw DomainException.SITUACAO_SUBMISSAO_INVALIDA();
 		}
+		submissao.setSituacao(SituacaoSubmissao.PROCESSANDO);
+		submissaoRepository.save(submissao);
 		try {
 			log.info("Buscando arquivo submissao {}", submissao.getId());
 			var arquivoSubmissao = arquivoSubmissaoRepository.findById(submissao.getId())
@@ -35,11 +37,13 @@ public class ProcessarSubmissao {
 			log.info("Processando submissao {}", submissaoId);
 			submissao.processar(arquivoSubmissao);
 			log.info("Submissao {} processada com sucesso", submissaoId);
-			submissao.setSituacao(SituacaoSubmissao.SUCESSO);
 		}
 		catch (Exception exception) {
 			log.error("Erro ao processar submissao {}", submissaoId, exception);
 			submissao.setSituacao(SituacaoSubmissao.FALHA);
+		}
+		finally {
+			submissaoRepository.save(submissao);
 		}
 	}
 
