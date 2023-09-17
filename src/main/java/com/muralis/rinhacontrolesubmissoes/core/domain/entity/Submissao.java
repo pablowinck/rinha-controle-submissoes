@@ -53,6 +53,7 @@ public class Submissao {
 		return id + ".yml";
 	}
 
+	@DynamoDBIgnore
 	public boolean isInvalidaParaProcessamento() {
 		return situacao.equals(SituacaoSubmissao.SUCESSO) || situacao.equals(SituacaoSubmissao.PROCESSANDO);
 	}
