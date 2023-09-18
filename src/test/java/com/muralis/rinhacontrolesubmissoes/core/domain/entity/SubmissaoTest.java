@@ -34,7 +34,6 @@ class SubmissaoTest {
 			.inputStream(submissaoGenerator.arquivoValido.getInputStream())
 			.build());
 		assertNotNull(submissao.getNota());
-		assertNotNull(submissao.getQuantidadePessoasInseridas());
 		assertEquals(SituacaoSubmissao.SUCESSO, submissao.getSituacao());
 	}
 

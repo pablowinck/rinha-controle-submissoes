@@ -22,8 +22,8 @@ public class DomainException extends RuntimeException {
 		return new DomainException("Submissão não encontrada", 404);
 	}
 
-	public static DomainException SITUACAO_SUBMISSAO_INVALIDA() {
-		return new DomainException("Situação da submissão é inválida para processamento", 400);
+	public static DomainException USUARIO_CADASTRADO() {
+		return new DomainException("Usuário já cadastrado", 400);
 	}
 
 }
