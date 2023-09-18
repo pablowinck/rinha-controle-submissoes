@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -49,6 +50,8 @@ public class Submissao {
 
 	private String nota;
 
+	private HashMap<String, String> metricas;
+
 	@DynamoDBIgnore
 	@JsonIgnore
 	public String getNomeArquivo() {
@@ -79,6 +82,7 @@ public class Submissao {
 			.add(compiladorUrl.getPath() + "/wait-for-file.sh " + compiladorUrl.getPath() + "/summary.json")
 			.add("node " + compiladorUrl.getPath() + "/compilar-nota.js " + compiladorUrl.getPath() + "/summary.json "
 					+ compiladorUrl.getPath() + "/score.json")
+			.add(compiladorUrl.getPath() + "/wait-for-file.sh " + compiladorUrl.getPath() + "/score.json")
 			.add("sleep 5")
 			.add("docker-compose -f " + tempFile + " down --volumes")
 			.add("docker rm -f $(docker ps -a -q)")
@@ -90,6 +94,10 @@ public class Submissao {
 		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		var scoreDTO = objectMapper.readValue(score, ScoreDTO.class);
 		this.nota = scoreDTO.score().toString();
+		this.metricas = new HashMap<>();
+		this.metricas.put("performance", scoreDTO.performance().toString());
+		this.metricas.put("correctness", scoreDTO.correctness().toString());
+		this.metricas.put("stability", scoreDTO.stability().toString());
 		CLIRunner.getInstance()
 			.add("rm -rf " + compiladorUrl.getPath() + "/score.json")
 			.add("rm -rf " + compiladorUrl.getPath() + "/summary.json")

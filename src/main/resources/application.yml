@@ -10,3 +10,13 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: https://key.muralis.com.br/auth/realms/rinha_backend
+keycloak:
+  cors: true
+management:
+  endpoints:
+    web:
+      cors:
+        allowed-headers: "*"
+        allowed-methods: "*"
+        allowed-origins: "*"
+        max-age: 3600
