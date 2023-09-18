@@ -31,4 +31,11 @@ public class SubmissaoMemoryRepository implements SubmissaoRepository {
 		submissoes.removeIf(submissao -> submissao.getId().equals(id));
 	}
 
+	@Override
+	public List<Submissao> findAllByUserIdOrderByDataEnvioDesc(String userId) {
+		return submissoes.stream().filter(submissao -> submissao.getUserId().equals(userId))
+				.sorted((s1, s2) -> s2.getDataEnvio().compareTo(s1.getDataEnvio()))
+				.limit(10).toList();
+	}
+
 }
