@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -94,6 +95,17 @@ public class Submissao {
 			.add("rm -rf " + compiladorUrl.getPath() + "/summary.json")
 			.run();
 		this.situacao = SituacaoSubmissao.SUCESSO;
+	}
+
+	public Ranking toRanking() {
+		return Ranking.builder()
+			.id(UUID.randomUUID().toString())
+			.dataEnvio(dataEnvio)
+			.userId(userId)
+			.linguagem(linguagem)
+			.categoria(categoria)
+			.nota(nota)
+			.build();
 	}
 
 }
