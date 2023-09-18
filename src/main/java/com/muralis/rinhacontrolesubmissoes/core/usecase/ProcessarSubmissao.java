@@ -8,6 +8,7 @@ import com.muralis.rinhacontrolesubmissoes.core.domain.repository.ArquivoSubmiss
 import com.muralis.rinhacontrolesubmissoes.core.domain.repository.SubmissaoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +23,7 @@ public class ProcessarSubmissao {
 
 	private final ApplicationEventPublisher publisher;
 
+	@CacheEvict(value = "submissao", key = "#submissaoId")
 	public void execute(String submissaoId) {
 		log.info("Buscando submissao {}", submissaoId);
 		Submissao submissao = submissaoRepository.findById(submissaoId)

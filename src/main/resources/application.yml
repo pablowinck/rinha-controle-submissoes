@@ -3,3 +3,10 @@ springdoc:
   api-docs:
     path: /v1/submissoes/v3/api-docs
 logging.pattern.level: '%5p [${spring.zipkin.service.name:${spring.application.name:}}%X{traceId:-},%X{spanId:-}]'
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://key.muralis.com.br/auth/realms/rinha_backend
