@@ -3,6 +3,7 @@ package com.muralis.rinhacontrolesubmissoes.core.domain.entity;
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.muralis.rinhacontrolesubmissoes.core.domain.mapper.LocalDateTimeConverter;
 import com.muralis.rinhacontrolesubmissoes.core.domain.service.CLIRunner;
@@ -48,8 +49,6 @@ public class Submissao {
 
 	private String nota;
 
-	private String quantidadePessoasInseridas;
-
 	@DynamoDBIgnore
 	@JsonIgnore
 	public String getNomeArquivo() {
@@ -57,6 +56,7 @@ public class Submissao {
 	}
 
 	@DynamoDBIgnore
+	@JsonIgnore
 	public boolean isInvalidaParaProcessamento() {
 		return situacao.equals(SituacaoSubmissao.SUCESSO) || situacao.equals(SituacaoSubmissao.PROCESSANDO);
 	}
@@ -87,9 +87,9 @@ public class Submissao {
 			.run();
 		var score = Files.readString(Path.of(compiladorUrl.getPath() + "/score.json"));
 		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		var scoreDTO = objectMapper.readValue(score, ScoreDTO.class);
 		this.nota = scoreDTO.score().toString();
-		this.quantidadePessoasInseridas = scoreDTO.count().toString();
 		CLIRunner.getInstance()
 			.add("rm -rf " + compiladorUrl.getPath() + "/score.json")
 			.add("rm -rf " + compiladorUrl.getPath() + "/summary.json")

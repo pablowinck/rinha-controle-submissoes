@@ -7,6 +7,7 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig;
+import org.socialsignin.spring.data.dynamodb.repository.EnableScanCount;
 import org.socialsignin.spring.data.dynamodb.repository.config.EnableDynamoDBRepositories;
 import org.springframework.context.annotation.*;
 
@@ -14,6 +15,7 @@ import org.springframework.context.annotation.*;
 @ComponentScan(basePackages = { "com.muralis.rinhacontrolesubmissoes.outbound.dynamodb" })
 @EnableDynamoDBRepositories(basePackages = { "com.muralis.rinhacontrolesubmissoes.outbound.dynamodb" })
 @Profile("!test")
+@EnableScanCount
 public class DynamoDBConfig {
 
 	@Bean

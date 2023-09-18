@@ -1,4 +1,4 @@
 package com.muralis.rinhacontrolesubmissoes.core.dto;
-public record ScoreDTO(Double score, Long count) {
+public record ScoreDTO(Double score) {
 
 }
