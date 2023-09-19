@@ -15,5 +15,5 @@ echo "Stopping running app"
 ssh -i $IAM_USER_KEY $SERVER "fuser -k 8080/tcp" || echo "failed to stop running app"
 
 echo "Starting app"
-ssh -i $IAM_USER_KEY $SERVER "nohup java -jar app.jar > logs.txt 2>&1 &" || echo "failed to start app"
+ssh -i $IAM_USER_KEY $SERVER "java -jar app.jar > logs.txt 2>&1 &" || echo "failed to start app"
 echo "Done"

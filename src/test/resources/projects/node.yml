@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   api1: # API - Instância 01
-    image: rinha-api:latest
+    image: pablowinck/rinha-node:1.0
     environment:
       DATABASE_URL: postgresql://postgres:2309@db:5432/root?schema=public
     depends_on:
@@ -15,7 +15,7 @@ services:
           memory: "0.5GB"
 
   api2: # API - Instância 02
-    image: rinha-api:latest
+    image: pablowinck/rinha-node:1.0
     environment:
       DATABASE_URL: postgresql://postgres:2309@db:5432/root?schema=public
     depends_on:
@@ -29,7 +29,7 @@ services:
           memory: "0.5GB"
 
   nginx: # Load Balancer
-    image: custom-nginx:latest
+    image: pablowinck/custom-ngnix:1.0
     depends_on:
       - api1
       - api2
@@ -54,3 +54,5 @@ services:
         limits:
           cpus: "1.20"
           memory: "1.7GB"
+## 1.5 CPU
+## 3 GB
