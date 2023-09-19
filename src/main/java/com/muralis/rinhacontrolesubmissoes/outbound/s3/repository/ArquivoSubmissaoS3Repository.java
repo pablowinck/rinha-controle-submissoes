@@ -19,7 +19,7 @@ public class ArquivoSubmissaoS3Repository implements ArquivoSubmissaoRepository 
 
 	private final AmazonS3 amazonS3;
 
-	@Value("${muralis.submissao.bucket:submissoes-rinha-backend}")
+	@Value("${muralis.submissao.bucket:submissoes-rinha-backend-2}")
 	private String bucket;
 
 	@Override
