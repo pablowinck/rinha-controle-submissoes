@@ -18,10 +18,6 @@ const data = {
 
 let totalScore = 0;
 
-let performanceFinalScore = 0;
-let correctnessFinalScore = 0;
-let stabilityFinalScore = 0;
-
 async function exec() {
     /**
      * Quantidade de requests sem timeout que representa uma nota 100 em performance.
@@ -61,7 +57,7 @@ async function exec() {
      * 1 significa que o resultado final inteiro será multiplicado pelo fator de
      * uniformidade (média geométrica sobre média aritmética.)
      */
-    const UNIFORMITY_PENALTY = 0.0;
+    const UNIFORMITY_PENALTY = 0.5;
 
     /**
      * @typedef Data Objeto representando as informações de uma avaliação que serão
@@ -81,6 +77,7 @@ async function exec() {
      * @returns {number} Número de 0 a 100 que é a nota compilada.
      */
     function calculate(data) {
+        console.log("calculating with data: {}", data);
         // Porcentagem do target que foi atingido.
         // O target é uma quantidade de requests.
         // O min(...) não deixa esta porcentagem ser maior que 100% (não deixa
@@ -93,6 +90,7 @@ async function exec() {
         // 0 a 100
         const performanceScore =
             Math.pow(performancePercentage, PERFORMANCE_SCORE_EXPONENT) * 100;
+        console.log("performance calculated: {}", {performanceScore, performancePercentage});
 
         const correctnessPercentage =
             (data.checksTotal - data.checksFailed) / data.checksTotal;
@@ -100,6 +98,7 @@ async function exec() {
         // 0 a 100
         const correctnessScore =
             Math.pow(correctnessPercentage, CORRECTNESS_SCORE_EXPONENT) * 100;
+        console.log("correctness calculated: {}", {correctnessScore, correctnessPercentage})
 
         const stabilityPercentage =
             (data.reqTotal - data.reqTimedOut) / data.reqTotal;
@@ -107,6 +106,7 @@ async function exec() {
         // 0 a 100
         const stabilityScore =
             Math.pow(stabilityPercentage, STABILITY_SCORE_EXPONENT) * 100;
+        console.log("stability calculated: {}", {stabilityScore, stabilityPercentage})
 
         // Agora calculamos um fator de uniformidade que é a média geométrica sobre a
         // média aritmética.
@@ -150,7 +150,6 @@ async function exec() {
         performanceFinalScore = performanceScore.toFixed(1);
         correctnessFinalScore = correctnessScore.toFixed(1);
         stabilityFinalScore = stabilityScore.toFixed(1);
-        // Isso é para debugar. Pode retirar.
         console.debug(`RESULTADO FINAL:`);
         console.debug(`Performance ${performanceScore.toFixed(1)}/100`);
         console.debug(`Correctness ${correctnessScore.toFixed(1)}/100`);

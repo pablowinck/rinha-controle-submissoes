@@ -98,10 +98,9 @@ public class Submissao {
 		this.metricas.put("performance", scoreDTO.performance().toString());
 		this.metricas.put("correctness", scoreDTO.correctness().toString());
 		this.metricas.put("stability", scoreDTO.stability().toString());
-		CLIRunner.getInstance()
-			.add("rm -rf " + compiladorUrl.getPath() + "/score.json")
-			.add("rm -rf " + compiladorUrl.getPath() + "/summary.json")
-			.run();
+		Files.deleteIfExists(new File(compiladorUrl.getPath() + "/score.json").toPath());
+		Files.deleteIfExists(new File(compiladorUrl.getPath() + "/summary.json").toPath());
+		Files.deleteIfExists(new File(compiladorUrl.getPath() + "/k6.log").toPath());
 		this.situacao = SituacaoSubmissao.SUCESSO;
 	}
 
