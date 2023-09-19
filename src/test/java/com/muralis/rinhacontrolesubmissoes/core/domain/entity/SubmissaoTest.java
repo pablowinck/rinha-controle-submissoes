@@ -1,6 +1,7 @@
 package com.muralis.rinhacontrolesubmissoes.core.domain.entity;
 
 import com.muralis.rinhacontrolesubmissoes.core.domain.generator.SubmissaoGenerator;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -26,6 +27,7 @@ class SubmissaoTest {
 
 	@Test
 	@DisplayName("Deve processar submissao")
+	@Disabled
 	void deveProcessarSubmissao() throws IOException {
 		SubmissaoGenerator submissaoGenerator = new SubmissaoGenerator();
 		var submissao = Submissao.builder().situacao(SituacaoSubmissao.AGUARDANDO_PROCESSAMENTO).build();

@@ -78,6 +78,7 @@ class SubmeterTest {
 
 		// when
 		var submissao = submeter.execute(command);
+		assertNotNull(submissao.getId());
 
 		// then
 		var submissaoOptional = submissaoRepository.findById(submissao.getId());
@@ -86,8 +87,8 @@ class SubmeterTest {
 		assertNotNull(submissaoSalva);
 		assertEquals(submissao.getId(), submissaoSalva.getId());
 		assertEquals(submissao.getNomeArquivo(), submissaoSalva.getNomeArquivo());
-		submissaoRepository.deleteById(submissao.getId());
-		arquivoSubmissaoRepository.deleteById(submissao.getId());
+		submissaoRepository.deleteById(submissaoSalva.getId());
+		arquivoSubmissaoRepository.deleteById(submissaoSalva.getId());
 	}
 
 	@Test

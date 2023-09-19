@@ -48,7 +48,7 @@ public class Submissao {
 	@DynamoDBTypeConvertedEnum
 	private Categoria categoria;
 
-	private String nota;
+	private Double nota;
 
 	private HashMap<String, String> metricas;
 
@@ -93,7 +93,7 @@ public class Submissao {
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		var scoreDTO = objectMapper.readValue(score, ScoreDTO.class);
-		this.nota = scoreDTO.score().toString();
+		this.nota = scoreDTO.score();
 		this.metricas = new HashMap<>();
 		this.metricas.put("performance", scoreDTO.performance().toString());
 		this.metricas.put("correctness", scoreDTO.correctness().toString());

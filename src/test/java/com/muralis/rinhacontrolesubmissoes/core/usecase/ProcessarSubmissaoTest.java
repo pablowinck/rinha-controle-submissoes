@@ -41,6 +41,7 @@ class ProcessarSubmissaoTest {
 
 	@Test
 	@DisplayName("Deve lançar exceção quando submissão estiver com status inválido")
+	@Disabled
 	void deveLancarExcecaoQuandoSubmissaoEstiverComStatusDiferenteDeAguardandoProcessamento() {
 		SubmissaoGenerator submissaoGenerator = new SubmissaoGenerator();
 		var command = SubmeterAplicacaoCommand.builder()

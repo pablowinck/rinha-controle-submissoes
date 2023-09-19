@@ -7,7 +7,7 @@ import java.net.URL;
 
 public class SubmissaoGenerator {
 
-	public final String usuarioValido = "valid_user";
+	public final String usuarioValido = "valid_user" + System.currentTimeMillis();
 
 	public final String linguagemValida = "Java";
 

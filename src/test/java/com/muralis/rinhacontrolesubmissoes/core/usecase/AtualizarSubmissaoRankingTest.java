@@ -27,16 +27,16 @@ class AtualizarSubmissaoRankingTest {
     void deveAtualizarRankingComSubmissao() {
         Submissao submissao = Submissao.builder()
                 .userId("123")
-                .nota("10")
+                .nota(10D)
                 .build();
         Ranking ranking = Ranking.builder()
                 .userId("123")
-                .nota("5")
+                .nota(5D)
                 .build();
         rankingRepository.save(ranking);
         atualizarSubmissaoRanking.on(new SubmissaoProcessada(submissao));
         Ranking rankingSalvo = rankingRepository.findByUserId("123").orElseThrow();
-        assertEquals("10", rankingSalvo.getNota());
+        assertEquals(10D, rankingSalvo.getNota());
     }
 
     @Test
@@ -44,11 +44,11 @@ class AtualizarSubmissaoRankingTest {
     void casoNaoExistirDeveCriarOrankingComSubmissao() {
         Submissao submissao = Submissao.builder()
                 .userId("1234")
-                .nota("10")
+                .nota(10D)
                 .build();
         atualizarSubmissaoRanking.on(new SubmissaoProcessada(submissao));
         Ranking rankingSalvo = rankingRepository.findByUserId("1234").orElseThrow();
-        assertEquals("10", rankingSalvo.getNota());
+        assertEquals(10D, rankingSalvo.getNota());
     }
 
     @Test
@@ -56,16 +56,16 @@ class AtualizarSubmissaoRankingTest {
     void casoNotaDaSubmissaoforMenorQueANotaDoRankingNaoDeveAtualizarORanking() {
         Submissao submissao = Submissao.builder()
                 .userId("123")
-                .nota("4")
+                .nota(4D)
                 .build();
         Ranking ranking = Ranking.builder()
                 .userId("123")
-                .nota("5")
+                .nota(5D)
                 .build();
         rankingRepository.save(ranking);
         atualizarSubmissaoRanking.on(new SubmissaoProcessada(submissao));
         Ranking rankingSalvo = rankingRepository.findByUserId("123").orElseThrow();
-        assertEquals("5", rankingSalvo.getNota());
+        assertEquals(5D, rankingSalvo.getNota());
     }
 
 }

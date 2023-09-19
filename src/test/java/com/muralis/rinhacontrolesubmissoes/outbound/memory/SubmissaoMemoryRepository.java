@@ -17,7 +17,7 @@ public class SubmissaoMemoryRepository implements SubmissaoRepository {
 
 	@Override
 	public Optional<Submissao> findById(String id) {
-		return submissoes.stream().filter(submissao -> submissao.getId().equals(id)).findFirst();
+		return submissoes.stream().filter(submissao -> Optional.ofNullable(submissao.getId()).orElse("").equals(id)).findFirst();
 	}
 
 	@Override

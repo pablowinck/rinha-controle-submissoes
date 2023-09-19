@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.Date;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -24,7 +26,7 @@ class ConsultarUsuarioPorEmailTest {
 	@Test
 	@DisplayName("Deve consultar usuario por email")
 	void deveConsultarUsuarioPorEmail() {
-		var email = "teste@teste.com";
+		var email = "teste" + new Date().getTime() + "@teste.com";
 		cadastrarUsuario.execute(new CadastrarUsuarioCommand(email, Categoria.PESO_PENA));
 		var usuario = consultarUsuarioPorEmail.execute(email);
 		assertNotNull(usuario);

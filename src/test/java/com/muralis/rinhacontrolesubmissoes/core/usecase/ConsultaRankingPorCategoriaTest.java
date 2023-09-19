@@ -29,19 +29,19 @@ class ConsultaRankingPorCategoriaTest {
         Ranking ranking = Ranking.builder()
                 .userId("123")
                 .categoria(Categoria.PESO_PENA)
-                .nota("10")
+                .nota(10D)
                 .build();
         rankingRepository.save(ranking);
         ranking = Ranking.builder()
                 .userId("1234")
                 .categoria(Categoria.PESO_PENA)
-                .nota("9")
+                .nota(9D)
                 .build();
         rankingRepository.save(ranking);
         ranking = Ranking.builder()
                 .userId("12345")
                 .categoria(Categoria.PESO_PESADO)
-                .nota("9")
+                .nota(9D)
                 .build();
         rankingRepository.save(ranking);
         var pesoPena = consultaRankingPorCategoria.execute("PESO_PENA", Pageable.ofSize(10));
@@ -55,19 +55,19 @@ class ConsultaRankingPorCategoriaTest {
         Ranking ranking = Ranking.builder()
                 .userId("123")
                 .categoria(Categoria.PESO_PENA)
-                .nota("10")
+                .nota(10D)
                 .build();
         rankingRepository.save(ranking);
         ranking = Ranking.builder()
                 .userId("1234")
                 .categoria(Categoria.PESO_PENA)
-                .nota("9")
+                .nota(9D)
                 .build();
         rankingRepository.save(ranking);
         ranking = Ranking.builder()
                 .userId("12345")
                 .categoria(Categoria.PESO_PESADO)
-                .nota("9")
+                .nota(9D)
                 .build();
         rankingRepository.save(ranking);
         var rankingSemFiltro = consultaRankingPorCategoria.execute(null, Pageable.ofSize(10));

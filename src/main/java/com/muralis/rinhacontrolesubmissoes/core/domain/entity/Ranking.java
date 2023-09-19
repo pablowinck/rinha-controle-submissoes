@@ -34,10 +34,10 @@ public class Ranking {
 	private Categoria categoria;
 
 	@DynamoDBIndexRangeKey(globalSecondaryIndexName = "categoria-nota-index", attributeName = "nota")
-	private String nota;
+	private Double nota;
 
 	@DynamoDBIgnore
-	public boolean notaMaiorQue(String notaParaComparar) {
+	public boolean notaMaiorQue(Double notaParaComparar) {
 		BigDecimal nota = new BigDecimal(this.nota);
 		BigDecimal notaComparar = new BigDecimal(notaParaComparar);
 		return nota.compareTo(notaComparar) > 0;
