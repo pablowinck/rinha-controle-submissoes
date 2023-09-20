@@ -1,5 +1,7 @@
 package com.muralis.rinhacontrolesubmissoes.core.config;
 
+import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
+import org.springframework.boot.actuate.health.HealthEndpoint;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +19,10 @@ public class CoreConfiguration {
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
+		http.authorizeHttpRequests(authorize -> authorize.requestMatchers(EndpointRequest.to(HealthEndpoint.class))
+			.permitAll()
+			.anyRequest()
+			.authenticated())
 			.oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))
 			.cors(cors -> cors.configurationSource(request -> {
 				var corsConfiguration = new org.springframework.web.cors.CorsConfiguration();
