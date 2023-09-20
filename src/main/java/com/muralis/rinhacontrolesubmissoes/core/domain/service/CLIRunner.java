@@ -4,6 +4,7 @@ import lombok.extern.log4j.Log4j2;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Log4j2
 public class CLIRunner {
@@ -28,8 +29,10 @@ public class CLIRunner {
 		commands.forEach(command -> {
 			try {
 				log.info("Running command: {}", command);
-				String[] rawCommand = new String[]{"/bin/bash", "-c", command};
-				Process process = Runtime.getRuntime().exec(rawCommand);
+				ProcessBuilder processBuilder = new ProcessBuilder("/bin/bash", "-c", command);
+				Map<String, String> environment = processBuilder.environment();
+				environment.put("PATH", "/usr/local/bin:" + environment.get("PATH"));
+				Process process = processBuilder.start();
 				byte[] buffer = new byte[8192];
 				int read;
 				while ((read = process.getInputStream().read(buffer, 0, 8192)) >= 0) {
