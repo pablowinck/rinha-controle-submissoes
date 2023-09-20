@@ -26,4 +26,8 @@ public class DomainException extends RuntimeException {
 		return new DomainException("Usuário já cadastrado", 400);
 	}
 
+	public static DomainException USUARIO_NAO_CADASTRADO() {
+		return new DomainException("Usuário não cadastrado", 400);
+	}
+
 }

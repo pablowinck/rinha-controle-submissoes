@@ -21,7 +21,7 @@ public class SubmeterAplicacaoCommand {
 	@NotBlank(message = "O campo userId é obrigatório")
 	private String userId;
 
-	@NotNull(message = "O campo categoria é obrigatório")
+	@JsonIgnore
 	private Categoria categoria;
 
 	@NotNull(message = "O campo linguagem é obrigatório")

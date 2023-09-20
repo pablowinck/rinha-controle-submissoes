@@ -1,9 +1,12 @@
 package com.muralis.rinhacontrolesubmissoes.core.usecase;
 
 import com.muralis.rinhacontrolesubmissoes.core.domain.entity.Categoria;
+import com.muralis.rinhacontrolesubmissoes.core.domain.entity.DomainException;
+import com.muralis.rinhacontrolesubmissoes.core.domain.entity.Usuario;
 import com.muralis.rinhacontrolesubmissoes.core.domain.generator.SubmissaoGenerator;
 import com.muralis.rinhacontrolesubmissoes.core.domain.repository.ArquivoSubmissaoRepository;
 import com.muralis.rinhacontrolesubmissoes.core.domain.repository.SubmissaoRepository;
+import com.muralis.rinhacontrolesubmissoes.core.domain.repository.UsuarioRepository;
 import com.muralis.rinhacontrolesubmissoes.core.dto.ProcessarSubmissaoCommand;
 import com.muralis.rinhacontrolesubmissoes.core.dto.SubmeterAplicacaoCommand;
 import com.muralis.rinhacontrolesubmissoes.core.event.MensagemPostadaNaFilaEmMemoria;
@@ -33,6 +36,9 @@ class SubmeterTest {
 
 	@Autowired
 	private SubmissaoRepository submissaoRepository;
+
+	@Autowired
+	private UsuarioRepository usuarioRepository;
 
 	@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 	@Autowired
@@ -115,6 +121,51 @@ class SubmeterTest {
 		assertEquals(command.getId(), processarSubmissaoCommand.getId());
 		submissaoRepository.deleteById(command.getId());
 		arquivoSubmissaoRepository.deleteById(command.getId());
+	}
+
+	@Test
+	@DisplayName("Caso usuário não cadastrado então deve lançar exceção")
+	void casoUsuarioNaoCadastradoEntaoDeveLancarExcecao() {
+		// given
+		SubmissaoGenerator submissaoGenerator = new SubmissaoGenerator();
+		var command = SubmeterAplicacaoCommand.builder()
+			.userId("nao-cadastrado")
+			.categoria(Categoria.PESO_PENA)
+			.linguagem(submissaoGenerator.linguagemValida)
+			.arquivo(submissaoGenerator.arquivoValido)
+			.build();
+
+		// when
+		var exception = Assertions.assertThrows(DomainException.class, () -> submeter.execute(command));
+
+		// then
+		assertEquals("Usuário não cadastrado", exception.getMessage());
+	}
+
+	@Test
+	@DisplayName("Deve setar a categoria do usuário na submissão")
+	void deveSetarACategoriaDoUsuarioNaSubmissao() {
+		// given
+		SubmissaoGenerator submissaoGenerator = new SubmissaoGenerator();
+		Usuario usuario = Usuario.builder()
+			.categoria(Categoria.PESO_PESADO)
+			.id(submissaoGenerator.usuarioValido)
+			.build();
+		usuarioRepository.save(usuario);
+		var command = SubmeterAplicacaoCommand.builder()
+			.userId(submissaoGenerator.usuarioValido)
+			.categoria(Categoria.PESO_PENA)
+			.linguagem(submissaoGenerator.linguagemValida)
+			.arquivo(submissaoGenerator.arquivoValido)
+			.build();
+
+		// when
+		var submissao = submeter.execute(command);
+
+		// then
+		assertEquals(Categoria.PESO_PESADO, submissao.getCategoria());
+		submissaoRepository.deleteById(submissao.getId());
+		arquivoSubmissaoRepository.deleteById(submissao.getId());
 	}
 
 }
