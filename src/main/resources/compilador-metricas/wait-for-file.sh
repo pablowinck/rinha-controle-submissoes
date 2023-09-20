@@ -12,8 +12,8 @@ FILE_NAME="$1"
 # Nome do arquivo sem o caminho do diretório
 BASE_NAME=$(basename "$FILE_NAME")
 
-# Loop para verificar se o arquivo existe
-while [ ! -f "$FILE_NAME" ]; do
+# Loop para verificar se o arquivo existe & se tem conteudo no arquivo
+while [ ! -s "$FILE_NAME" ]; do
     echo "Arquivo $BASE_NAME ainda não foi criado. Aguardando..."
     sleep 10
 done

@@ -9,13 +9,17 @@ import com.muralis.rinhacontrolesubmissoes.core.domain.mapper.LocalDateTimeConve
 import com.muralis.rinhacontrolesubmissoes.core.domain.service.CLIRunner;
 import com.muralis.rinhacontrolesubmissoes.core.dto.ScoreDTO;
 import lombok.*;
+import lombok.extern.log4j.Log4j2;
 
-import java.io.File;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.PosixFileAttributes;
+import java.nio.file.attribute.PosixFilePermission;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.Set;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -25,6 +29,7 @@ import java.util.UUID;
 @DynamoDBTable(tableName = "SubmissoesRinha")
 @Getter
 @Setter
+@Log4j2
 public class Submissao {
 
 	@DynamoDBHashKey(attributeName = "id")
@@ -70,26 +75,29 @@ public class Submissao {
 		Path tempDirectory = Files.createTempDirectory(id);
 		File tempFile = new File(tempDirectory.toString() + "/" + arquivoSubmissao.getNomeArquivo());
 		Files.copy(inputStream, tempFile.toPath());
-		var compiladorUrl = getClass().getClassLoader().getResource("compilador-metricas");
+		Path healthcheck = createTempFileFromResource("compilador-metricas/healthcheck", "sh", tempDirectory);
+		Path k6Index = createTempFileFromResource("compilador-metricas/index", "js", tempDirectory);
+		Path waitforfile = createTempFileFromResource("compilador-metricas/wait-for-file", "sh", tempDirectory);
+		Path compilarNota = createTempFileFromResource("compilador-metricas/compilar-nota", "js", tempDirectory);
+		Path summary = createOutputPath("summary.json", tempDirectory);
+		Path k6Logs = createOutputPath("k6.log", tempDirectory);
+		Path scoreOutput = createOutputPath("score.json", tempDirectory);
 		CLIRunner.getInstance()
 			.add("docker rm -f $(docker ps -a -q)")
 			.add("docker volume rm $(docker volume ls -q)")
 			.add("sleep 5")
 			.add("docker-compose -f " + tempFile + " up -d")
-			.add(compiladorUrl.getPath() + "/healthcheck.sh")
-			.add("nohup k6 run " + compiladorUrl.getPath() + "/index.js --summary-export=" + compiladorUrl.getPath()
-					+ "/summary.json &> " + compiladorUrl.getPath() + "/k6.log &")
-			.add(compiladorUrl.getPath() + "/wait-for-file.sh " + compiladorUrl.getPath() + "/summary.json")
-			.add("node " + compiladorUrl.getPath() + "/compilar-nota.js " + compiladorUrl.getPath() + "/summary.json "
-					+ compiladorUrl.getPath() + "/score.json")
-			.add(compiladorUrl.getPath() + "/wait-for-file.sh " + compiladorUrl.getPath() + "/score.json")
+			.add(healthcheck.toString())
+			.add("nohup k6 run " + k6Index + " --summary-export=" + summary + " &> " + k6Logs + " &")
+			.add(waitforfile + " " + summary)
+			.add("node " + compilarNota + " " + summary + " " + scoreOutput)
+			.add(waitforfile + " " + scoreOutput)
 			.add("sleep 5")
 			.add("docker-compose -f " + tempFile + " down --volumes")
 			.add("docker rm -f $(docker ps -a -q)")
 			.add("docker volume rm $(docker volume ls -q)")
-			.add("rm -rf " + tempDirectory)
 			.run();
-		var score = Files.readString(Path.of(compiladorUrl.getPath() + "/score.json"));
+		var score = Files.readString(scoreOutput);
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		var scoreDTO = objectMapper.readValue(score, ScoreDTO.class);
@@ -98,10 +106,46 @@ public class Submissao {
 		this.metricas.put("performance", scoreDTO.performance().toString());
 		this.metricas.put("correctness", scoreDTO.correctness().toString());
 		this.metricas.put("stability", scoreDTO.stability().toString());
-		Files.deleteIfExists(new File(compiladorUrl.getPath() + "/score.json").toPath());
-		Files.deleteIfExists(new File(compiladorUrl.getPath() + "/summary.json").toPath());
-		Files.deleteIfExists(new File(compiladorUrl.getPath() + "/k6.log").toPath());
+		Files.deleteIfExists(tempFile.toPath());
 		this.situacao = SituacaoSubmissao.SUCESSO;
+	}
+
+	private Path createTempFileFromResource(String resource, String extension, Path tempDirectory) {
+		String fileName = resource.split("/")[1];
+		try (InputStream inputStream = getClass().getClassLoader()
+			.getResourceAsStream(resource.concat(".").concat(extension))) {
+			Path tempFile = Files.createTempFile(tempDirectory, fileName, "." + extension);
+            assert inputStream != null;
+            Files.copy(inputStream, tempFile, StandardCopyOption.REPLACE_EXISTING);
+			allowPermissions(tempFile);
+			return tempFile;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private void allowPermissions(Path tempFile) throws IOException {
+		Set<PosixFilePermission> perms = Files.readAttributes(tempFile, PosixFileAttributes.class).permissions();
+		perms.add(PosixFilePermission.OWNER_WRITE);
+		perms.add(PosixFilePermission.OWNER_READ);
+		perms.add(PosixFilePermission.OWNER_EXECUTE);
+		perms.add(PosixFilePermission.GROUP_WRITE);
+		perms.add(PosixFilePermission.GROUP_READ);
+		perms.add(PosixFilePermission.GROUP_EXECUTE);
+		perms.add(PosixFilePermission.OTHERS_WRITE);
+		perms.add(PosixFilePermission.OTHERS_READ);
+		perms.add(PosixFilePermission.OTHERS_EXECUTE);
+		Files.setPosixFilePermissions(tempFile, perms);
+	}
+
+	private Path createOutputPath(String filename, Path tempDirectory) {
+		try {
+			return new File(String.valueOf(tempDirectory.resolve(filename))).toPath();
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public Ranking toRanking() {
