@@ -22,13 +22,13 @@ async function exec() {
     /**
      * Quantidade de requests sem timeout que representa uma nota 100 em performance.
      */
-    const TARGET_REQUESTS = 1000000;
+    const TARGET_REQUESTS = 750_000;
 
     /**
      * Usar um expoente de 0.5 significa que alcançar 25% do target de requisições
      * gera uma pontuação de 50/100 em performance.
      */
-    const PERFORMANCE_SCORE_EXPONENT = 0.3;
+    const PERFORMANCE_SCORE_EXPONENT = 0.49;
 
     const PERFORMANCE_WEIGHT = 0.4;
 
