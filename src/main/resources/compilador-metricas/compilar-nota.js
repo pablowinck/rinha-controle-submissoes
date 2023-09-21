@@ -11,7 +11,7 @@ const summaryJSON = JSON.parse(fs.readFileSync(summaryFolder));
 // summaryJSON values
 const data = {
     reqTotal: summaryJSON.metrics.http_reqs.count,
-    reqTimedOut: summaryJSON.metrics.http_req_failed.fails,
+    reqTimedOut: summaryJSON.metrics.http_reqs_completed.fails,
     checksTotal: summaryJSON.metrics.checks.passes + summaryJSON.metrics.checks.fails,
     checksFailed: summaryJSON.metrics.checks.fails,
 }
