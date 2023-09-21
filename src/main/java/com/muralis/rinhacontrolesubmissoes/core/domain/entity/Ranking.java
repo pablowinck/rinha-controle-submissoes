@@ -21,7 +21,7 @@ public class Ranking {
 	private String id;
 
 	@DynamoDBTypeConverted(converter = LocalDateTimeConverter.class)
-	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss", locale = "pt-BR", timezone = "Brazil/East")
 	private LocalDateTime dataEnvio;
 
 	@DynamoDBIndexHashKey(globalSecondaryIndexName = "userId-index", attributeName = "userId")

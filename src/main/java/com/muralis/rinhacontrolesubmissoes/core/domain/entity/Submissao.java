@@ -43,7 +43,7 @@ public class Submissao {
 
 	@Builder.Default
 	@DynamoDBTypeConverted(converter = LocalDateTimeConverter.class)
-	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss", locale = "pt-BR", timezone = "Brazil/East")
 	@DynamoDBIndexRangeKey(globalSecondaryIndexName = "userId-index", attributeName = "dataEnvio")
 	private LocalDateTime dataEnvio = LocalDateTime.now();
 
