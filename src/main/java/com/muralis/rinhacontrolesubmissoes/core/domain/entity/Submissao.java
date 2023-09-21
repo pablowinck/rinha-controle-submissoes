@@ -11,7 +11,9 @@ import com.muralis.rinhacontrolesubmissoes.core.dto.ScoreDTO;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -86,7 +88,9 @@ public class Submissao {
 			.add("docker rm -f $(docker ps -a -q)")
 			.add("docker volume rm $(docker volume ls -q)")
 			.add("sleep 5")
-			.add("docker-compose -f " + tempFile + " up -d")
+			.add("docker-compose -f " + tempFile + " rm -f")
+			.add("docker-compose -f " + tempFile + " build --pull")
+			.add("yes Y | docker-compose -f " + tempFile + " up -d")
 			.add(healthcheck.toString())
 			.add("nohup k6 run " + k6Index + " --summary-export=" + summary + " &> " + k6Logs + " &")
 			.add(waitforfile + " " + summary)
@@ -115,8 +119,8 @@ public class Submissao {
 		try (InputStream inputStream = getClass().getClassLoader()
 			.getResourceAsStream(resource.concat(".").concat(extension))) {
 			Path tempFile = Files.createTempFile(tempDirectory, fileName, "." + extension);
-            assert inputStream != null;
-            Files.copy(inputStream, tempFile, StandardCopyOption.REPLACE_EXISTING);
+			assert inputStream != null;
+			Files.copy(inputStream, tempFile, StandardCopyOption.REPLACE_EXISTING);
 			allowPermissions(tempFile);
 			return tempFile;
 		}
