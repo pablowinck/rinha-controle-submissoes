@@ -28,7 +28,7 @@ async function exec() {
      * Usar um expoente de 0.5 significa que alcançar 25% do target de requisições
      * gera uma pontuação de 50/100 em performance.
      */
-    const PERFORMANCE_SCORE_EXPONENT = 0.5;
+    const PERFORMANCE_SCORE_EXPONENT = 0.3;
 
     const PERFORMANCE_WEIGHT = 0.4;
 
@@ -44,7 +44,7 @@ async function exec() {
      * Usar um expoente de 7 significa que alcançar 90% de taxa de requests completas
      * sem timeout gera uma pontuação de 50/100 em stability.
      */
-    const STABILITY_SCORE_EXPONENT = 7;
+    const STABILITY_SCORE_EXPONENT = 1.18;
 
     const STABILITY_WEIGHT = 0.3;
 
