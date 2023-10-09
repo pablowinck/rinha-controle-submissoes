@@ -14,9 +14,9 @@ while [ "$http_status" != "200" ]; do
   # Make a curl request and store only the HTTP status code
   http_status=$(curl -o /dev/null -s -w "%{http_code}\n" --location 'http://localhost:9999/contagem-pessoas')
 
-  if [ "$attempt" -gt 60 ]; then
+  if [ "$attempt" -gt 600 ]; then
     # Log failure and exit the script with a status of 1
-    echo "Did not receive HTTP 200 status code after 60 attempts. Exiting."
+    echo "Did not receive HTTP 200 status code after 600 attempts. Exiting."
     exit 1
   fi
   # Log the HTTP status code received
